@@ -31,7 +31,16 @@ DoublyList<T>::~DoublyList() {
 template <typename T>
 void DoublyList<T>::append(const T& elem) {
     // TO DO: Implement the code for the append
-
+    Node* n = new Node(elem);
+    if (header == nullptr){
+        header = n;
+        trailer = n;
+    }else{
+        trailer->next = n;
+        n->prev = trailer;
+        trailer = n;
+    }
+    this->length++;
 }
 
 template <typename T>
@@ -67,6 +76,14 @@ void DoublyList<T>::copy(const DoublyList<T>& copyObj) {
 template <typename T>
 T DoublyList<T>::getElement(int position) const {
     // TO DO: Implent code for getElement at position
+    if(position < 0 || position >= this->length){
+        throw out_of_range("Position is out of range");
+    }
+    Node* curr = header;
+    for (int i = 0; i <= position; i++){
+        curr = curr->next;
+    }
+    return curr->value;
 }
 
 template <typename T>
@@ -78,6 +95,33 @@ int DoublyList<T>::getLength() const {
 template <typename T>
 void DoublyList<T>::insert(int position, const T& elem) {
   // TO DO: Implement code to insert an element to list
+  if (position < 0 || position > this->length){
+      throw out_of_range("Position is out of range");
+  }
+    if (position == 0){
+        Node *n = new Node(elem);
+        n->next = header;
+        if (header != nullptr){
+            header->prev = n;
+        } else {
+            trailer = n;
+        }
+    } 
+    if (position == this->length){
+        append(elem);
+        return;
+    }
+    Node * n = new Node(elem);
+    Node * curr = header;
+    for (int i = 0; i < position; i++){
+        curr = curr->next;
+    }
+    Node *prevNode = curr->prev;
+    n->next = curr;
+    n->prev = prevNode;
+    prevNode->next = n;
+    curr->prev = n;
+    this->length++;
 }
 
 template <typename T>
@@ -89,18 +133,46 @@ bool DoublyList<T>::isEmpty() const {
 
 template <typename T>
 void DoublyList<T>::remove(int position) {
-    // TO DO: Implement code to remove element at given position
+    if (position < 0 || position >= this->length){
+        throw out_of_range("Position is out of range");
+    } 
+    Node * curr = header; 
+    for (int i = 0; i <= position; i++){
+        curr = curr->next;
+    }
+    Node * prevNode = curr->prev;
+    Node * nextNode = curr->next;
+    prevNode->next = nextNode;
+    nextNode->prev = prevNode;
+    delete curr;
+    this->length--;
+
 }
 
 template <typename T>
 bool DoublyList<T>::search(const T& elem) const {
     // TO DO: Implement code to search for element
+    Node * curr = header; 
+    while (curr != trailer){
+        if (curr->value == elem){
+            return true;
+        }
+        curr = curr->next;
+    }
     return false;
 }
 
 template <typename T>
 void DoublyList<T>::replace(int position, const T& elem) {
     // TO DO: Add code for replace method
+    if (position < 0 || position >= this->length){
+        throw out_of_range("Position is out of range");
+    }
+    Node * curr = header;
+    while (curr != trailer){
+        curr = curr->next;
+    }
+    curr->value = elem;
 }
 
 template <typename T>

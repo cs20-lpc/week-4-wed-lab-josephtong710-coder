@@ -25,5 +25,5 @@ int main()
 
     bool found = dlist.search(54);
     cout << found << " ";
-
+    return 0;
 }
